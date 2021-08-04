@@ -3,20 +3,17 @@ const UNDERSCORE_ITALIC = '_';
 const ASTERISK_BOLD = '**';
 const UNDERSCORE_BOLD = '__';
 
-const ASTERISK_PLACEHOLDER_REGEXP = /ASTERISKPLACEHOLDER/gm;
-const UNDERSCORE_PLACEHOLDER_REGEXP = /UNDERSCOREPLACEHOLDER/gm;
-
 const UNDERSCORE_BOLD_PLACEHOLDER_REGEXP = /UNDERSCOREBOLDPLACEHOLDER/gm;
-const UNDERSCORE_BOLD_REGEXP = /__(.*)__/gim;
+const UNDERSCORE_BOLD_REGEXP = /(__)(.*?)(__)/g;
 
 const ASTERISK_BOLD_PLACEHOLDER_REGEXP = /ASTERISKBOLDPLACEHOLDER/gm;
-const ASTERISK_BOLD_REGEXP = /\*\*(.*)\*\*/gim;
+const ASTERISK_BOLD_REGEXP = /(\*\*)(.*?)(\*\*)/g;
 
 const UNDERSCORE_ITALIC_PLACEHOLDER_REGEXP = /UNDERSCOREITALICPLACEHOLDER/gm;
-const UNDERSCORE_ITALIC_REGEXP = /_(.*)_/gim;
+const UNDERSCORE_ITALIC_REGEXP = /(_)(.*?)(_)/g;
 
 const ASTERISK_ITALIC_PLACEHOLDER_REGEXP = /ASTERISKITALICPLACEHOLDER/gm;
-const ASTERISK_ITALIC_REGEXP = /\*(.*)\*/gim;
+const ASTERISK_ITALIC_REGEXP = /(\*)(.*?)(\*)/g;
 
 const HYPERLINK = /^\[([^[]+)\]\(([^)]+)\)/;
 
@@ -24,19 +21,19 @@ const replaceFormatMarkersWithPlaceholders = text =>
   text
     .replace(
       UNDERSCORE_BOLD_REGEXP,
-      `${UNDERSCORE_BOLD_PLACEHOLDER_REGEXP.source}$1${UNDERSCORE_BOLD_PLACEHOLDER_REGEXP.source}`
+      `${UNDERSCORE_BOLD_PLACEHOLDER_REGEXP.source}$2${UNDERSCORE_BOLD_PLACEHOLDER_REGEXP.source}`
     )
     .replace(
       ASTERISK_BOLD_REGEXP,
-      `${ASTERISK_BOLD_PLACEHOLDER_REGEXP.source}$1${ASTERISK_BOLD_PLACEHOLDER_REGEXP.source}`
+      `${ASTERISK_BOLD_PLACEHOLDER_REGEXP.source}$2${ASTERISK_BOLD_PLACEHOLDER_REGEXP.source}`
     )
     .replace(
       UNDERSCORE_ITALIC_REGEXP,
-      `${UNDERSCORE_ITALIC_PLACEHOLDER_REGEXP.source}$1${UNDERSCORE_ITALIC_PLACEHOLDER_REGEXP.source}`
+      `${UNDERSCORE_ITALIC_PLACEHOLDER_REGEXP.source}$2${UNDERSCORE_ITALIC_PLACEHOLDER_REGEXP.source}`
     )
     .replace(
       ASTERISK_ITALIC_REGEXP,
-      `${ASTERISK_ITALIC_PLACEHOLDER_REGEXP.source}$1${ASTERISK_ITALIC_PLACEHOLDER_REGEXP.source}`
+      `${ASTERISK_ITALIC_PLACEHOLDER_REGEXP.source}$2${ASTERISK_ITALIC_PLACEHOLDER_REGEXP.source}`
     );
 
 const replaceFormatPlaceholdersWithMarkers = text =>
@@ -50,7 +47,7 @@ const formatMarkers = [
   ASTERISK_BOLD_PLACEHOLDER_REGEXP.source,
   UNDERSCORE_BOLD_PLACEHOLDER_REGEXP.source,
   ASTERISK_ITALIC_PLACEHOLDER_REGEXP.source,
-  UNDERSCORE_ITALIC_PLACEHOLDER_REGEXP.source
+  UNDERSCORE_ITALIC_PLACEHOLDER_REGEXP.source,
 ];
 
 const formatMarkerAhead = (text, formatStack) => {
@@ -107,7 +104,7 @@ const truncate = (text, limit, ellipsis) => {
       skipCountIncrement = false;
     }
 
-    outputText = outputText.trimEnd()
+    outputText = outputText.trimEnd();
 
     while (formatStack.length > 0) {
       outputText += formatStack.pop();
@@ -126,9 +123,9 @@ const truncate = (text, limit, ellipsis) => {
 };
 
 module.exports = function (text = '', options = {}) {
-  const { limit, ellipsis } = options || {}
+  const { limit, ellipsis } = options || {};
 
- if (isNaN(parseInt(limit, 10)) || text.length <= limit) {
+  if (isNaN(parseInt(limit, 10)) || text.length <= limit) {
     return text;
   }
 

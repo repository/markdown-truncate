@@ -70,6 +70,11 @@ describe('truncateMarkdown test suite', () => {
       '_[**italics wrapping lin**](https://google.com)_',
       { limit: 20 },
     ],
+    [
+      'Enter some *markdown text* **here**, change the **character _limit_**, and check that the text is __properly__ truncated',
+      'Enter some *markdown text* **here**, change the **character _limit_**, and check that the text is __properly__ trunc',
+      { limit: 100 }
+    ]
   ])('%s is truncated correctly', (input, expected, options) => {
     const output = truncateMarkdown(input, options);
     expect(output).toEqual(expected);
